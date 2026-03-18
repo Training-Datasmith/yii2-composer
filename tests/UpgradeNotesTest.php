@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tests;
 
 use yii\composer\Plugin;
@@ -115,7 +117,7 @@ Upgrade from Yii 2.0.0-alpha
 These are the upgrade notes from 2.0.0-alpha.
 
 STRING
-        , implode("\n", $notes));
+            , implode("\n", $notes));
     }
 
     public function testUpgradeNotesFromMajor()
@@ -143,7 +145,7 @@ Upgrade from Yii 2.0.12
 These are the upgrade notes from 2.0.12.
 
 STRING
-        , implode("\n", $notes));
+            , implode("\n", $notes));
     }
 
     public function testUpgradeNotesFromMinorWithMinorNotes()
@@ -161,7 +163,7 @@ Upgrade from Yii 2.0.13.1
 These are the upgrade notes from 2.0.13.1.
 
 STRING
-        , implode("\n", $notes));
+            , implode("\n", $notes));
     }
 
     public function testUpgradeNotesFromMinorWithoutMinorNotes()
@@ -189,7 +191,7 @@ Upgrade from Yii 2.0.12
 These are the upgrade notes from 2.0.12.
 
 STRING
-        , implode("\n", $notes));
+            , implode("\n", $notes));
     }
 
     public function testIsNumericVersion(): void

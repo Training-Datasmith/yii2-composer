@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 // create a virtual package to make composer load the plugin from the current directory
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -36,7 +38,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * @var string path to the vendor directory.
      */
     private ?string $_vendorDir = null;
-
 
     /**
      * @inheritdoc
@@ -79,7 +80,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             ScriptEvents::POST_UPDATE_CMD => 'showUpgradeNotes',
         ];
     }
-
 
     /**
      * Listen to POST_PACKAGE_UPDATE event and take note of the package updates.

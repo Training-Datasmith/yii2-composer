@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -8,10 +10,9 @@
 
 namespace yii\composer;
 
-use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
+use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
-use Composer\Script\CommandEvent;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
 use React\Promise\PromiseInterface;
@@ -235,7 +236,9 @@ class Installer extends LibraryInstaller
             mkdir($yiiDir, 0777, true);
         }
         foreach (['Yii.php', 'BaseYii.php', 'classes.php'] as $file) {
-            file_put_contents($yiiDir . '/' . $file, <<<EOF
+            file_put_contents(
+                $yiiDir . '/' . $file,
+                <<<EOF
 <?php
 /**
  * This is a link provided by the yiisoft/yii2-dev package via yii2-composer plugin.
