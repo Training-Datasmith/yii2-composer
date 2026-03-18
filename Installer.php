@@ -38,7 +38,7 @@ class Installer extends LibraryInstaller
      */
     public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
-        $afterInstall = function () use ($package) {
+        $afterInstall = function () use ($package): void {
             // add the package to yiisoft/extensions.php
             $this->addPackage($package);
             // ensure the yii2-dev package also provides Yii.php in the same place as yii2 does
@@ -64,7 +64,7 @@ class Installer extends LibraryInstaller
      */
     public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
     {
-        $afterUpdate = function () use ($initial, $target) {
+        $afterUpdate = function () use ($initial, $target): void {
             $this->removePackage($initial);
             $this->addPackage($target);
             // ensure the yii2-dev package also provides Yii.php in the same place as yii2 does
@@ -90,7 +90,7 @@ class Installer extends LibraryInstaller
      */
     public function uninstall(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
-        $afterUninstall = function () use ($package) {
+        $afterUninstall = function () use ($package): void {
             // remove the package from yiisoft/extensions.php
             $this->removePackage($package);
             // remove links for Yii.php
@@ -270,7 +270,7 @@ EOF
      *
      * @param Event $event
      */
-    public static function postCreateProject($event)
+    public static function postCreateProject($event): void
     {
         static::runCommands($event, __METHOD__);
     }
@@ -281,7 +281,7 @@ EOF
      * @param Event $event
      * @since 2.0.5
      */
-    public static function postInstall($event)
+    public static function postInstall($event): void
     {
         static::runCommands($event, __METHOD__);
     }
@@ -298,7 +298,7 @@ EOF
         $params = $event->getComposer()->getPackage()->getExtra();
         if (isset($params[$extraKey]) && is_array($params[$extraKey])) {
             foreach ($params[$extraKey] as $method => $args) {
-                call_user_func_array([__CLASS__, $method], (array) $args);
+                call_user_func_array([self::class, $method], (array) $args);
             }
         }
     }
@@ -307,7 +307,7 @@ EOF
      * Sets the correct permission for the files and directories listed in the extra section.
      * @param array $paths the paths (keys) and the corresponding permission octal strings (values)
      */
-    public static function setPermission(array $paths)
+    public static function setPermission(array $paths): void
     {
         foreach ($paths as $path => $permission) {
             echo "chmod('$path', $permission)...";
@@ -329,7 +329,7 @@ EOF
      * Generates a cookie validation key for every app config listed in "config" in extra section.
      * You can provide one or multiple parameters as the configuration files which need to have validation key inserted.
      */
-    public static function generateCookieValidationKey()
+    public static function generateCookieValidationKey(): void
     {
         $configs = func_get_args();
         $key = self::generateRandomString();
@@ -371,7 +371,7 @@ EOF
      * existing files).
      * @since 2.0.5
      */
-    public static function copyFiles(array $paths)
+    public static function copyFiles(array $paths): void
     {
         foreach ($paths as $source => $target) {
             // handle file target as array [path, overwrite]
@@ -382,11 +382,12 @@ EOF
                 echo "source file not found.\n";
                 continue;
             }
-
             if (is_file($target[0]) && empty($target[1])) {
                 echo "target file exists - skip.\n";
                 continue;
-            } elseif (is_file($target[0]) && !empty($target[1])) {
+            }
+
+            if (is_file($target[0]) && !empty($target[1])) {
                 echo 'target file exists - overwrite - ';
             }
 

@@ -27,24 +27,21 @@ use Composer\Script\ScriptEvents;
  */
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    /**
-     * @var Installer
-     */
-    private $_installer;
+    private ?\yii\composer\Installer $_installer = null;
     /**
      * @var array noted package updates.
      */
-    private $_packageUpdates = [];
+    private array $_packageUpdates = [];
     /**
      * @var string path to the vendor directory.
      */
-    private $_vendorDir;
+    private ?string $_vendorDir = null;
 
 
     /**
      * @inheritdoc
      */
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io): void
     {
         $this->_installer = new Installer($io, $composer);
         $composer->getInstallationManager()->addInstaller($this->_installer);
@@ -59,7 +56,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * @inheritdoc
      */
-    public function deactivate(Composer $composer, IOInterface $io)
+    public function deactivate(Composer $composer, IOInterface $io): void
     {
         $composer->getInstallationManager()->removeInstaller($this->_installer);
     }
@@ -75,7 +72,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * @inheritdoc
      * @return array The event names to listen to.
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             PackageEvents::POST_PACKAGE_UPDATE => 'checkPackageUpdates',
@@ -86,9 +83,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Listen to POST_PACKAGE_UPDATE event and take note of the package updates.
-     * @param PackageEvent $event
      */
-    public function checkPackageUpdates(PackageEvent $event)
+    public function checkPackageUpdates(PackageEvent $event): void
     {
         $operation = $event->getOperation();
         if ($operation instanceof UpdateOperation) {
@@ -103,8 +99,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
-     * @param PackageEvent $event
-     * @param UpdateOperation $operation
      * @return bool
      */
     private function _isUpgrade(PackageEvent $event, UpdateOperation $operation)
@@ -126,9 +120,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Listen to POST_UPDATE_CMD event to display information about upgrade notes if appropriate.
-     * @param Script\Event $event
      */
-    public function showUpgradeNotes(Script\Event $event)
+    public function showUpgradeNotes(Script\Event $event): void
     {
         $packageName = 'yiisoft/yii2';
         if (!isset($this->_packageUpdates[$packageName])) {
@@ -177,9 +170,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Print link to upgrade notes
      * @param IOInterface $io
-     * @param array $package
      */
-    private function printUpgradeLink($io, $package)
+    private function printUpgradeLink($io, array $package): void
     {
         $maxVersion = $package['direction'] === 'up' ? $package['toPretty'] : $package['fromPretty'];
         // make sure to always show a valid link, even if $maxVersion is something like dev-master
@@ -192,9 +184,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Print upgrade intro
      * @param IOInterface $io
-     * @param array $package
      */
-    private function printUpgradeIntro($io, $package)
+    private function printUpgradeIntro($io, array $package): void
     {
         $io->write("\n  <fg=yellow;options=bold>Seems you have "
             . ($package['direction'] === 'up' ? 'upgraded' : 'downgraded')
@@ -206,11 +197,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Read upgrade notes from a files and returns an array of lines
-     * @param string $packageName
      * @param string $fromVersion until which version to read the notes
      * @return array|false
      */
-    private function findUpgradeNotes($packageName, $fromVersion)
+    private function findUpgradeNotes(string $packageName, $fromVersion)
     {
         if (preg_match('/^([0-9]\.[0-9]+\.?[0-9]*)/', $fromVersion, $m)) {
             $fromVersionMajor = $m[1];
@@ -247,9 +237,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Check whether a version is numeric, e.g. 2.0.10.
      * @param string $version
-     * @return bool
      */
-    private function isNumericVersion($version)
+    private function isNumericVersion($version): bool
     {
         return (bool) preg_match('~^([0-9]\.[0-9]+\.?[0-9\.]*)~', $version);
     }
